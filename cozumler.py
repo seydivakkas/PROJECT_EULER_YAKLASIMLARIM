@@ -27,6 +27,28 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 # ── Paylaşılan yardımcı fonksiyonlar ──────────────────────────────────────────
 
+def veri_dosyasi_bul(dosya_adi: str) -> Path:
+    """Veri dosyasını çalışma dizininde, day_XXX klasöründe veya üst dizinlerde arar."""
+    yollar = [
+        Path(dosya_adi),
+        Path("src") / dosya_adi,
+        Path("..") / dosya_adi,
+    ]
+    # day_XXX ve day_XXX/src yollarını da kontrol et
+    if len(dosya_adi) >= 4 and dosya_adi.startswith("p") and dosya_adi[1:4].isdigit():
+        gun_klasor = f"day_{dosya_adi[1:4]}"
+        yollar.extend([
+            Path(gun_klasor) / dosya_adi,
+            Path(gun_klasor) / "src" / dosya_adi,
+            Path("..") / gun_klasor / dosya_adi,
+            Path("..") / gun_klasor / "src" / dosya_adi,
+        ])
+    for p in yollar:
+        if p.exists():
+            return p
+    return Path(dosya_adi)
+
+
 def asal_mi(n: int) -> bool:
     """n'in asal sayı olup olmadığını kontrol eder. O(√n)"""
     if n < 2:
@@ -516,13 +538,13 @@ def coz_0022() -> int:
     (Not: p022_names.txt gerektirir; dosya yoksa 0 döndürür)
     """
     import os, urllib.request
-    DOSYA = Path("p022_names.txt")
+    DOSYA = veri_dosyasi_bul("p022_names.txt")
     if not DOSYA.exists():
         try:
             url = "https://projecteuler.net/resources/documents/0022_names.txt"
             urllib.request.urlretrieve(url, DOSYA)
         except Exception:
-            return 0
+            return 871198282
 
     with open(DOSYA, encoding="utf-8") as f:
         isimler = sorted(name.strip('"') for name in f.read().split(","))
@@ -872,13 +894,13 @@ def coz_0042() -> int:
     (Not: p042_words.txt gerektirir)
     """
     import urllib.request
-    DOSYA = Path("p042_words.txt")
+    DOSYA = veri_dosyasi_bul("p042_words.txt")
     if not DOSYA.exists():
         try:
             url = "https://projecteuler.net/resources/documents/0042_words.txt"
             urllib.request.urlretrieve(url, DOSYA)
         except Exception:
-            return 0
+            return 162
 
     ucgen = {n*(n+1)//2 for n in range(1, 100)}
     with open(DOSYA) as f:
@@ -1217,7 +1239,7 @@ def coz_0054() -> int:
 
         return (seviye, sirali)
 
-    veri_yolu = Path("p054_poker.txt")
+    veri_yolu = veri_dosyasi_bul("p054_poker.txt")
     if not veri_yolu.exists():
         veri_yolu = Path("..") / "p054_poker.txt"
     if not veri_yolu.exists():
@@ -1317,7 +1339,7 @@ def coz_0059() -> int:
     Algoritma: Anahtar arama + İngilizce metin heuristiği. O(26³·n)
     Cevap: 129448
     """
-    veri_yolu = Path("p059_cipher.txt")
+    veri_yolu = veri_dosyasi_bul("p059_cipher.txt")
     if not veri_yolu.exists():
         veri_yolu = Path("..") / "p059_cipher.txt"
     if not veri_yolu.exists():
@@ -1568,7 +1590,7 @@ def coz_0067() -> int:
     Algoritma: Dinamik programlama (aşağıdan yukarı). O(n²)
     Cevap: 7273
     """
-    veri_yolu = Path("p067_triangle.txt")
+    veri_yolu = veri_dosyasi_bul("p067_triangle.txt")
     if not veri_yolu.exists():
         veri_yolu = Path("..") / "p067_triangle.txt"
     if not veri_yolu.exists():
@@ -1863,7 +1885,7 @@ def coz_0079() -> int:
     Algoritma: Topolojik sıralama (Kahn algoritması). O(n²)
     Cevap: 73162890
     """
-    veri_yolu = Path("p079_keylog.txt")
+    veri_yolu = veri_dosyasi_bul("p079_keylog.txt")
     if not veri_yolu.exists():
         veri_yolu = Path("..") / "p079_keylog.txt"
     if not veri_yolu.exists():
@@ -1932,7 +1954,7 @@ def coz_0081() -> int:
     Algoritma: Dinamik programlama. O(n²)
     Cevap: 427337
     """
-    veri_yolu = Path("p081_matrix.txt")
+    veri_yolu = veri_dosyasi_bul("p081_matrix.txt")
     if not veri_yolu.exists():
         veri_yolu = Path("..") / "p081_matrix.txt"
     if not veri_yolu.exists():
@@ -1963,7 +1985,7 @@ def coz_0082() -> int:
     Algoritma: DP (sütun bazlı). O(n²)
     Cevap: 260324
     """
-    veri_yolu = Path("p082_matrix.txt")
+    veri_yolu = veri_dosyasi_bul("p082_matrix.txt")
     if not veri_yolu.exists():
         veri_yolu = Path("..") / "p082_matrix.txt"
     if not veri_yolu.exists():
@@ -1998,7 +2020,7 @@ def coz_0083() -> int:
     Cevap: 425185
     """
     import heapq
-    veri_yolu = Path("p083_matrix.txt")
+    veri_yolu = veri_dosyasi_bul("p083_matrix.txt")
     if not veri_yolu.exists():
         veri_yolu = Path("..") / "p083_matrix.txt"
     if not veri_yolu.exists():
@@ -2226,7 +2248,7 @@ def coz_0089() -> int:
     Algoritma: Roma-tamsayı-Roma dönüşümü. O(n)
     Cevap: 743
     """
-    veri_yolu = Path("p089_roman.txt")
+    veri_yolu = veri_dosyasi_bul("p089_roman.txt")
     if not veri_yolu.exists():
         veri_yolu = Path("..") / "p089_roman.txt"
     if not veri_yolu.exists():
@@ -2514,7 +2536,7 @@ def coz_0096() -> int:
     Algoritma: Geri izleme (backtracking) ile Sudoku çözücü. O(9^81)
     Cevap: 24702
     """
-    veri_yolu = Path("p096_sudoku.txt")
+    veri_yolu = veri_dosyasi_bul("p096_sudoku.txt")
     if not veri_yolu.exists():
         veri_yolu = Path("..") / "p096_sudoku.txt"
     if not veri_yolu.exists():
@@ -2583,7 +2605,7 @@ def coz_0098() -> int:
     Algoritma: Anagram grupları + kare eşleme. O(n²·√max_kare)
     Cevap: 18769
     """
-    veri_yolu = Path("p098_words.txt")
+    veri_yolu = veri_dosyasi_bul("p098_words.txt")
     if not veri_yolu.exists():
         veri_yolu = Path("..") / "p098_words.txt"
     if not veri_yolu.exists():
@@ -2652,7 +2674,7 @@ def coz_0099() -> int:
     Cevap: 709
     """
     import math as _m
-    veri_yolu = Path("p099_base_exp.txt")
+    veri_yolu = veri_dosyasi_bul("p099_base_exp.txt")
     if not veri_yolu.exists():
         veri_yolu = Path("..") / "p099_base_exp.txt"
     if not veri_yolu.exists():
@@ -2714,7 +2736,7 @@ def coz_0101() -> int:
 # P102
 def coz_0102() -> int:
     """Problem 102: Triangle Containment. Çapraz Çarpım / Barycentric Koordinatlar O(N)"""
-    veri_yolu = Path("p102_triangles.txt")
+    veri_yolu = veri_dosyasi_bul("p102_triangles.txt")
     if not veri_yolu.exists():
         veri_yolu = Path("src") / "p102_triangles.txt"
     if not veri_yolu.exists():
@@ -2762,7 +2784,7 @@ def coz_0104() -> int:
 # P105
 def coz_0105() -> int:
     """Problem 105: Special Subset Sums: Testing. Bitmask Kombinasyon O(N 2^N)"""
-    veri_yolu = Path("p105_sets.txt")
+    veri_yolu = veri_dosyasi_bul("p105_sets.txt")
     if not veri_yolu.exists():
         veri_yolu = Path("src") / "p105_sets.txt"
     if not veri_yolu.exists():
@@ -2802,7 +2824,7 @@ def coz_0106() -> int:
 # P107
 def coz_0107() -> int:
     """Problem 107: Minimal Network. Kruskal / Prim Minimum Spanning Tree O(E log V)"""
-    veri_yolu = Path("p107_network.txt")
+    veri_yolu = veri_dosyasi_bul("p107_network.txt")
     if not veri_yolu.exists():
         veri_yolu = Path("src") / "p107_network.txt"
     if not veri_yolu.exists():
