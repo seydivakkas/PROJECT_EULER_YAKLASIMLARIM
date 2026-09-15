@@ -22,5 +22,6 @@ tmp/
 .vscode/
 .idea/
 .DS_Store
-Thumbs.db
-desktop.ini
+# Standalone repositories / other projects
+Görüntü_isleme_YAKLAŞIMLARIM/
+notebooks/
